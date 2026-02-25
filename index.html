@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cotizador de Muebles</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface2: #f4f5f8;
+    --border: #e2e5ed;
+    --accent: #d4a000;
+    --accent2: #0a9e6a;
+    --danger: #e03040;
+    --purple: #7a55e8;
+    --text: #1a1e2e;
+    --muted: #6b7794;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .logo-area h1 {
+    font-family: var(--font-head);
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .logo-area h1 .accent { color: var(--accent); }
+
+  .logo-area p {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 6px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  /* STATS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--accent), transparent); }
+  .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), transparent); }
+  .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #f08060, transparent); }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--font-head);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    transition: color 0.3s;
+  }
+
+  .stat-card:nth-child(1) .stat-value { color: var(--accent); }
+  .stat-card:nth-child(2) .stat-value { color: var(--accent2); }
+  .stat-card:nth-child(3) .stat-value { color: var(--purple); }
+  .stat-card:nth-child(4) .stat-value { color: #f08060; }
+
+  /* TOOLBAR */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: var(--font-head);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .btn-primary:hover { background: #f5d060; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--muted); color: var(--text); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+  }
+  .btn-danger:hover { background: rgba(240,80,96,0.1); }
+
+  .spacer { flex: 1; }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th {
+    padding: 13px 14px;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    text-align: left;
+  }
+
+  thead th.center { text-align: center; }
+  thead th.right  { text-align: right; }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(42,49,71,0.6);
+    transition: background 0.15s;
+    animation: rowIn 0.3s ease both;
+  }
+
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  tbody tr:hover { background: rgba(212,160,0,0.04); }
+  tbody tr:last-child { border-bottom: none; }
+
+  td {
+    padding: 10px 14px;
+    vertical-align: middle;
+  }
+
+  /* Inputs inside table */
+  td input[type="text"],
+  td input[type="number"] {
+    background: #f9fafc;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 4px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  td input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(212,160,0,0.12);
+  }
+
+  td input[readonly] {
+    background: transparent;
+    border-color: transparent;
+    color: var(--muted);
+    cursor: default;
+  }
+
+  td select {
+    background: #f9fafc;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 4px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+
+  td select:focus { border-color: var(--accent); }
+
+  .td-num { text-align: right; font-variant-numeric: tabular-nums; }
+  .td-center { text-align: center; }
+
+  .row-num {
+    font-size: 0.75rem;
+    color: var(--border);
+    font-weight: 500;
+    text-align: center;
+    min-width: 32px;
+    display: block;
+  }
+
+  .net-val { color: var(--muted) !important; }
+  .iva-val { color: var(--purple) !important; }
+  .total-val { color: var(--accent2) !important; font-weight: 500; }
+
+  /* IVA badge */
+  .iva-tag-si {
+    display: inline-block;
+    background: rgba(160,128,255,0.15);
+    color: var(--purple);
+    border: 1px solid rgba(160,128,255,0.3);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .iva-tag-no {
+    display: inline-block;
+    background: rgba(107,119,148,0.15);
+    color: var(--muted);
+    border: 1px solid rgba(107,119,148,0.2);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  /* Delete btn */
+  .btn-del-row {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-del-row:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: rgba(240,80,96,0.06);
+  }
+
+  /* FOOTER */
+  tfoot td {
+    padding: 16px 14px;
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-label {
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .footer-subtotal { color: var(--muted); font-size: 0.9rem; text-align: right; }
+  .footer-iva { color: var(--purple); font-size: 0.9rem; text-align: right; }
+
+  .footer-total {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-align: right;
+    letter-spacing: -0.5px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--border);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+  }
+
+  .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.4; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    padding: 12px 22px;
+    border-radius: 5px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.85rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .toast.success { background: var(--accent2); color: var(--bg); }
+  .toast.info    { background: var(--text); color: #fff; border: 1px solid var(--border); }
+  .toast.show    { opacity: 1; transform: translateY(0); }
+
+  /* Highlight on update */
+  @keyframes flash {
+    0%   { background: rgba(10,158,106,0.12); }
+    100% { background: transparent; }
+  }
+
+  .flash { animation: flash 0.5s ease; }
+
+  @media (max-width: 900px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: 1fr; }
+    .logo-area h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="logo-area">
+      <h1>COTIZADOR DE <span class="accent">MUEBLES</span></h1>
+      <p>Gestión de presupuestos · IVA 19%</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn btn-outline" onclick="window.print()">🖨 Imprimir</button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Ítems cotizados</div>
+      <div class="stat-value" id="s-items">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Subtotal neto</div>
+      <div class="stat-value" id="s-net">$0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">IVA total</div>
+      <div class="stat-value" id="s-iva">$0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total final</div>
+      <div class="stat-value" id="s-total">$0</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="addRow()">+ Nueva fila</button>
+    <button class="btn btn-outline" onclick="addRow(true)">+ Fila con IVA</button>
+    <div class="spacer"></div>
+    <button class="btn btn-danger" onclick="resetTable()">↺ Reiniciar</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="center">#</th>
+          <th>Material / Mueble</th>
+          <th class="right">Valor unitario</th>
+          <th class="center">Cantidad</th>
+          <th class="right">Total neto</th>
+          <th class="center">IVA 19%</th>
+          <th class="right">Total final</th>
+          <th class="center">Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot">
+        <tr>
+          <td colspan="4" class="footer-label">RESUMEN</td>
+          <td class="footer-subtotal" id="f-net">$0</td>
+          <td class="footer-iva" id="f-iva">$0</td>
+          <td class="footer-total" id="f-total">$0</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div id="empty-state" class="empty-state" style="display:none">
+      <span>🛋️</span>
+      <p>Sin ítems. Agrega una fila para comenzar.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const tbody = document.getElementById('tbody');
+let rowCount = 0;
+
+const fmt = v => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(v);
+const fmtShort = v => {
+  if (Math.abs(v) >= 1e6) return '$ ' + (v/1e6).toFixed(1) + 'M';
+  if (Math.abs(v) >= 1e3) return '$ ' + (v/1e3).toFixed(0) + 'K';
+  return fmt(v);
+};
+
+function addRow(withIva = false) {
+  rowCount++;
+  const tr = document.createElement('tr');
+  tr.dataset.id = rowCount;
+
+  tr.innerHTML = `
+    <td><span class="row-num">—</span></td>
+    <td><input type="text" class="mat-name" placeholder="Ej: Sofá 3 cuerpos"></td>
+    <td><input type="number" class="unit-price" min="0" step="100" value="0" style="text-align:right"></td>
+    <td style="text-align:center">
+      <select class="qty-sel">
+        ${[...Array(50)].map((_,i)=>`<option value="${i+1}"${i===0?' selected':''}>${i+1}</option>`).join('')}
+      </select>
+    </td>
+    <td class="td-num"><input type="text" class="net-val" readonly></td>
+    <td class="td-center">
+      <select class="iva-sel">
+        <option value="no"${!withIva?' selected':''}>No</option>
+        <option value="si"${withIva?' selected':''}>Sí</option>
+      </select>
+    </td>
+    <td class="td-num"><input type="text" class="total-val" readonly></td>
+    <td class="td-center"><button class="btn-del-row" onclick="deleteRow(this)">✕ Eliminar</button></td>
+  `;
+
+  tr.addEventListener('input', () => { calcRow(tr); calcAll(); });
+  tr.addEventListener('change', () => { calcRow(tr); calcAll(); });
+
+  tbody.appendChild(tr);
+  renumber();
+  calcRow(tr);
+  calcAll();
+  checkEmpty();
+  tr.querySelector('.mat-name').focus();
+  showToast('Fila agregada', 'success');
+}
+
+function deleteRow(btn) {
+  const tr = btn.closest('tr');
+  tr.style.transition = 'opacity 0.2s, transform 0.2s';
+  tr.style.opacity = '0';
+  tr.style.transform = 'translateX(12px)';
+  setTimeout(() => { tr.remove(); renumber(); calcAll(); checkEmpty(); }, 200);
+  showToast('Fila eliminada', 'info');
+}
+
+function renumber() {
+  [...tbody.rows].forEach((row, i) => {
+    row.querySelector('.row-num').textContent = String(i + 1).padStart(2, '0');
+  });
+}
+
+function calcRow(tr) {
+  const price = parseFloat(tr.querySelector('.unit-price').value) || 0;
+  const qty   = parseInt(tr.querySelector('.qty-sel').value) || 1;
+  const iva   = tr.querySelector('.iva-sel').value;
+  const net   = price * qty;
+  const total = iva === 'si' ? net * 1.19 : net;
+
+  const netInp   = tr.querySelector('.net-val');
+  const totInp   = tr.querySelector('.total-val');
+  const ivaInp   = tr.querySelector('.iva-sel');
+
+  netInp.value  = fmt(net);
+  totInp.value  = fmt(total);
+
+  // Style the total cell based on IVA
+  totInp.style.color = iva === 'si' ? 'var(--accent2)' : 'var(--muted)';
+
+  return { net, total, iva };
+}
+
+function calcAll() {
+  let sumNet = 0, sumTotal = 0;
+  const rows = [...tbody.rows];
+
+  rows.forEach(tr => {
+    const { net, total } = calcRow(tr);
+    sumNet   += net;
+    sumTotal += total;
+  });
+
+  const sumIva = sumTotal - sumNet;
+
+  // Footer
+  document.getElementById('f-net').textContent   = fmt(sumNet);
+  document.getElementById('f-iva').textContent   = fmt(sumIva);
+  document.getElementById('f-total').textContent = fmt(sumTotal);
+
+  // Stats
+  animateValue('s-items', rows.length);
+  document.getElementById('s-net').textContent   = fmtShort(sumNet);
+  document.getElementById('s-iva').textContent   = fmtShort(sumIva);
+  document.getElementById('s-total').textContent = fmtShort(sumTotal);
+
+  // Flash stats
+  ['s-net','s-iva','s-total'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+  });
+}
+
+function animateValue(id, val) {
+  document.getElementById(id).textContent = val;
+}
+
+function checkEmpty() {
+  const empty = tbody.rows.length === 0;
+  document.getElementById('empty-state').style.display = empty ? 'block' : 'none';
+  document.getElementById('tfoot').style.display = empty ? 'none' : '';
+}
+
+function resetTable() {
+  if (tbody.rows.length > 0 && !confirm('¿Reiniciar la tabla? Se perderán todos los datos.')) return;
+  tbody.innerHTML = '';
+  rowCount = 0;
+  calcAll();
+  checkEmpty();
+  showToast('Tabla reiniciada', 'info');
+  // Add 3 default rows
+  for (let i = 0; i < 3; i++) setTimeout(() => addRow(), i * 60);
+}
+
+function exportCSV() {
+  if (tbody.rows.length === 0) { showToast('No hay datos para exportar', 'info'); return; }
+  const rows = [['N°','Material','Valor Unitario','Cantidad','Total Neto','IVA','Total Final']];
+  [...tbody.rows].forEach((tr, i) => {
+    const name  = tr.querySelector('.mat-name').value || '-';
+    const price = tr.querySelector('.unit-price').value;
+    const qty   = tr.querySelector('.qty-sel').value;
+    const iva   = tr.querySelector('.iva-sel').value === 'si' ? '19%' : 'No';
+    const net   = tr.querySelector('.net-val').value;
+    const total = tr.querySelector('.total-val').value;
+    rows.push([i+1, name, price, qty, net, iva, total]);
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = 'cotizacion_muebles.csv';
+  a.click();
+  showToast('CSV exportado ✓', 'success');
+}
+
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// Init
+checkEmpty();
+resetTable();
+</script>
+</body>
+</html>
