@@ -14,7 +14,6 @@
     --accent: #d4a000;
     --accent2: #0a9e6a;
     --danger: #e03040;
-    --purple: #7a55e8;
     --text: #1a1e2e;
     --muted: #6b7794;
     --font-head: 'Syne', sans-serif;
@@ -50,16 +49,10 @@
     padding: 40px 24px 80px;
   }
 
-  /* HEADER */
   header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
     padding-bottom: 24px;
     border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-    gap: 16px;
   }
 
   .logo-area h1 {
@@ -80,62 +73,6 @@
     text-transform: uppercase;
   }
 
-  .header-actions { display: flex; gap: 10px; align-items: center; }
-
-  /* STATS */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 32px;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 18px 20px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
-
-  .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--accent), transparent); }
-  .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--accent2), transparent); }
-  .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--purple), transparent); }
-  .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #f08060, transparent); }
-
-  .stat-label {
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .stat-value {
-    font-family: var(--font-head);
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-    transition: color 0.3s;
-  }
-
-  .stat-card:nth-child(1) .stat-value { color: var(--accent); }
-  .stat-card:nth-child(2) .stat-value { color: var(--accent2); }
-  .stat-card:nth-child(3) .stat-value { color: var(--purple); }
-  .stat-card:nth-child(4) .stat-value { color: #f08060; }
-
-  /* TOOLBAR */
   .toolbar {
     display: flex;
     gap: 10px;
@@ -161,47 +98,22 @@
   }
 
   .btn:active { transform: scale(0.97); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-  }
-  .btn-primary:hover { background: #f5d060; }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-  }
-  .btn-outline:hover { border-color: var(--muted); color: var(--text); }
-
-  .btn-danger {
-    background: transparent;
-    color: var(--danger);
-    border: 1px solid var(--danger);
-  }
-  .btn-danger:hover { background: rgba(240,80,96,0.1); }
-
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #e8b800; }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+  .btn-danger:hover { background: rgba(224,48,64,0.08); }
   .spacer { flex: 1; }
 
-  /* TABLE */
   .table-wrap {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 0;
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+  table { width: 100%; border-collapse: collapse; }
 
-  thead tr {
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-  }
+  thead tr { background: var(--surface2); border-bottom: 1px solid var(--border); }
 
   thead th {
     padding: 13px 14px;
@@ -218,7 +130,7 @@
   thead th.right  { text-align: right; }
 
   tbody tr {
-    border-bottom: 1px solid rgba(42,49,71,0.6);
+    border-bottom: 1px solid var(--border);
     transition: background 0.15s;
     animation: rowIn 0.3s ease both;
   }
@@ -231,12 +143,8 @@
   tbody tr:hover { background: rgba(212,160,0,0.04); }
   tbody tr:last-child { border-bottom: none; }
 
-  td {
-    padding: 10px 14px;
-    vertical-align: middle;
-  }
+  td { padding: 10px 14px; vertical-align: middle; }
 
-  /* Inputs inside table */
   td input[type="text"],
   td input[type="number"] {
     background: #f9fafc;
@@ -259,8 +167,9 @@
   td input[readonly] {
     background: transparent;
     border-color: transparent;
-    color: var(--muted);
+    color: var(--accent2);
     cursor: default;
+    font-weight: 500;
   }
 
   td select {
@@ -285,41 +194,12 @@
 
   .row-num {
     font-size: 0.75rem;
-    color: var(--border);
+    color: var(--muted);
     font-weight: 500;
     text-align: center;
-    min-width: 32px;
     display: block;
   }
 
-  .net-val { color: var(--muted) !important; }
-  .iva-val { color: var(--purple) !important; }
-  .total-val { color: var(--accent2) !important; font-weight: 500; }
-
-  /* IVA badge */
-  .iva-tag-si {
-    display: inline-block;
-    background: rgba(160,128,255,0.15);
-    color: var(--purple);
-    border: 1px solid rgba(160,128,255,0.3);
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-
-  .iva-tag-no {
-    display: inline-block;
-    background: rgba(107,119,148,0.15);
-    color: var(--muted);
-    border: 1px solid rgba(107,119,148,0.2);
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 20px;
-  }
-
-  /* Delete btn */
   .btn-del-row {
     background: transparent;
     border: 1px solid var(--border);
@@ -336,14 +216,13 @@
   .btn-del-row:hover {
     border-color: var(--danger);
     color: var(--danger);
-    background: rgba(240,80,96,0.06);
+    background: rgba(224,48,64,0.06);
   }
 
-  /* FOOTER */
   tfoot td {
     padding: 16px 14px;
     background: var(--surface2);
-    border-top: 1px solid var(--border);
+    border-top: 2px solid var(--border);
   }
 
   .footer-label {
@@ -355,9 +234,6 @@
     color: var(--muted);
   }
 
-  .footer-subtotal { color: var(--muted); font-size: 0.9rem; text-align: right; }
-  .footer-iva { color: var(--purple); font-size: 0.9rem; text-align: right; }
-
   .footer-total {
     font-family: var(--font-head);
     font-size: 1.5rem;
@@ -367,18 +243,16 @@
     letter-spacing: -0.5px;
   }
 
-  /* Empty state */
   .empty-state {
     text-align: center;
     padding: 50px 20px;
-    color: var(--border);
+    color: var(--muted);
     font-size: 0.85rem;
     letter-spacing: 1px;
   }
 
   .empty-state span { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.4; }
 
-  /* Toast */
   .toast {
     position: fixed;
     bottom: 28px; right: 28px;
@@ -394,24 +268,11 @@
     z-index: 999;
   }
 
-  .toast.success { background: var(--accent2); color: var(--bg); }
-  .toast.info    { background: var(--text); color: #fff; border: 1px solid var(--border); }
+  .toast.success { background: var(--accent2); color: #fff; }
+  .toast.info    { background: var(--text); color: #fff; }
   .toast.show    { opacity: 1; transform: translateY(0); }
 
-  /* Highlight on update */
-  @keyframes flash {
-    0%   { background: rgba(10,158,106,0.12); }
-    100% { background: transparent; }
-  }
-
-  .flash { animation: flash 0.5s ease; }
-
-  @media (max-width: 900px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-  }
-
   @media (max-width: 600px) {
-    .stats-row { grid-template-columns: 1fr; }
     .logo-area h1 { font-size: 1.8rem; }
   }
 </style>
@@ -422,43 +283,16 @@
   <header>
     <div class="logo-area">
       <h1>COTIZADOR DE <span class="accent">MUEBLES</span></h1>
-      <p>Gestión de presupuestos · IVA 19%</p>
-    </div>
-    <div class="header-actions">
-      <button class="btn btn-outline" onclick="exportCSV()">⬇ Exportar CSV</button>
-      <button class="btn btn-outline" onclick="window.print()">🖨 Imprimir</button>
+      <p>Gestión de presupuestos</p>
     </div>
   </header>
 
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">Ítems cotizados</div>
-      <div class="stat-value" id="s-items">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Subtotal neto</div>
-      <div class="stat-value" id="s-net">$0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">IVA total</div>
-      <div class="stat-value" id="s-iva">$0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total final</div>
-      <div class="stat-value" id="s-total">$0</div>
-    </div>
-  </div>
-
-  <!-- Toolbar -->
   <div class="toolbar">
     <button class="btn btn-primary" onclick="addRow()">+ Nueva fila</button>
-    <button class="btn btn-outline" onclick="addRow(true)">+ Fila con IVA</button>
     <div class="spacer"></div>
     <button class="btn btn-danger" onclick="resetTable()">↺ Reiniciar</button>
   </div>
 
-  <!-- Table -->
   <div class="table-wrap">
     <table>
       <thead>
@@ -467,18 +301,14 @@
           <th>Material / Mueble</th>
           <th class="right">Valor unitario</th>
           <th class="center">Cantidad</th>
-          <th class="right">Total neto</th>
-          <th class="center">IVA 19%</th>
-          <th class="right">Total final</th>
+          <th class="right">Total</th>
           <th class="center">Acción</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
       <tfoot id="tfoot">
         <tr>
-          <td colspan="4" class="footer-label">RESUMEN</td>
-          <td class="footer-subtotal" id="f-net">$0</td>
-          <td class="footer-iva" id="f-iva">$0</td>
+          <td colspan="4" class="footer-label">TOTAL GENERAL</td>
           <td class="footer-total" id="f-total">$0</td>
           <td></td>
         </tr>
@@ -499,38 +329,26 @@ const tbody = document.getElementById('tbody');
 let rowCount = 0;
 
 const fmt = v => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(v);
-const fmtShort = v => {
-  if (Math.abs(v) >= 1e6) return '$ ' + (v/1e6).toFixed(1) + 'M';
-  if (Math.abs(v) >= 1e3) return '$ ' + (v/1e3).toFixed(0) + 'K';
-  return fmt(v);
-};
 
-function addRow(withIva = false) {
+function addRow() {
   rowCount++;
   const tr = document.createElement('tr');
   tr.dataset.id = rowCount;
 
   tr.innerHTML = `
     <td><span class="row-num">—</span></td>
-    <td><input type="text" class="mat-name" placeholder="Ej: Sofá 3 cuerpos"></td>
+    <td style="min-width:280px"><input type="text" class="mat-name" placeholder="Ej: Sofá 3 cuerpos"></td>
     <td><input type="number" class="unit-price" min="0" step="100" value="0" style="text-align:right"></td>
     <td style="text-align:center">
       <select class="qty-sel">
         ${[...Array(50)].map((_,i)=>`<option value="${i+1}"${i===0?' selected':''}>${i+1}</option>`).join('')}
       </select>
     </td>
-    <td class="td-num"><input type="text" class="net-val" readonly></td>
-    <td class="td-center">
-      <select class="iva-sel">
-        <option value="no"${!withIva?' selected':''}>No</option>
-        <option value="si"${withIva?' selected':''}>Sí</option>
-      </select>
-    </td>
     <td class="td-num"><input type="text" class="total-val" readonly></td>
     <td class="td-center"><button class="btn-del-row" onclick="deleteRow(this)">✕ Eliminar</button></td>
   `;
 
-  tr.addEventListener('input', () => { calcRow(tr); calcAll(); });
+  tr.addEventListener('input',  () => { calcRow(tr); calcAll(); });
   tr.addEventListener('change', () => { calcRow(tr); calcAll(); });
 
   tbody.appendChild(tr);
@@ -560,57 +378,15 @@ function renumber() {
 function calcRow(tr) {
   const price = parseFloat(tr.querySelector('.unit-price').value) || 0;
   const qty   = parseInt(tr.querySelector('.qty-sel').value) || 1;
-  const iva   = tr.querySelector('.iva-sel').value;
-  const net   = price * qty;
-  const total = iva === 'si' ? net * 1.19 : net;
-
-  const netInp   = tr.querySelector('.net-val');
-  const totInp   = tr.querySelector('.total-val');
-  const ivaInp   = tr.querySelector('.iva-sel');
-
-  netInp.value  = fmt(net);
-  totInp.value  = fmt(total);
-
-  // Style the total cell based on IVA
-  totInp.style.color = iva === 'si' ? 'var(--accent2)' : 'var(--muted)';
-
-  return { net, total, iva };
+  const total = price * qty;
+  tr.querySelector('.total-val').value = fmt(total);
+  return total;
 }
 
 function calcAll() {
-  let sumNet = 0, sumTotal = 0;
-  const rows = [...tbody.rows];
-
-  rows.forEach(tr => {
-    const { net, total } = calcRow(tr);
-    sumNet   += net;
-    sumTotal += total;
-  });
-
-  const sumIva = sumTotal - sumNet;
-
-  // Footer
-  document.getElementById('f-net').textContent   = fmt(sumNet);
-  document.getElementById('f-iva').textContent   = fmt(sumIva);
-  document.getElementById('f-total').textContent = fmt(sumTotal);
-
-  // Stats
-  animateValue('s-items', rows.length);
-  document.getElementById('s-net').textContent   = fmtShort(sumNet);
-  document.getElementById('s-iva').textContent   = fmtShort(sumIva);
-  document.getElementById('s-total').textContent = fmtShort(sumTotal);
-
-  // Flash stats
-  ['s-net','s-iva','s-total'].forEach(id => {
-    const el = document.getElementById(id);
-    el.classList.remove('flash');
-    void el.offsetWidth;
-    el.classList.add('flash');
-  });
-}
-
-function animateValue(id, val) {
-  document.getElementById(id).textContent = val;
+  let sum = 0;
+  [...tbody.rows].forEach(tr => { sum += calcRow(tr); });
+  document.getElementById('f-total').textContent = fmt(sum);
 }
 
 function checkEmpty() {
@@ -626,28 +402,7 @@ function resetTable() {
   calcAll();
   checkEmpty();
   showToast('Tabla reiniciada', 'info');
-  // Add 3 default rows
   for (let i = 0; i < 3; i++) setTimeout(() => addRow(), i * 60);
-}
-
-function exportCSV() {
-  if (tbody.rows.length === 0) { showToast('No hay datos para exportar', 'info'); return; }
-  const rows = [['N°','Material','Valor Unitario','Cantidad','Total Neto','IVA','Total Final']];
-  [...tbody.rows].forEach((tr, i) => {
-    const name  = tr.querySelector('.mat-name').value || '-';
-    const price = tr.querySelector('.unit-price').value;
-    const qty   = tr.querySelector('.qty-sel').value;
-    const iva   = tr.querySelector('.iva-sel').value === 'si' ? '19%' : 'No';
-    const net   = tr.querySelector('.net-val').value;
-    const total = tr.querySelector('.total-val').value;
-    rows.push([i+1, name, price, qty, net, iva, total]);
-  });
-  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }));
-  a.download = 'cotizacion_muebles.csv';
-  a.click();
-  showToast('CSV exportado ✓', 'success');
 }
 
 let toastTimer;
@@ -661,7 +416,6 @@ function showToast(msg, type = 'success') {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// Init
 checkEmpty();
 resetTable();
 </script>
